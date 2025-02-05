@@ -17,8 +17,12 @@ export const ClassProvider = ({ children }) => {
     );
   };
 
+  const deleteClass = (id) => {
+    setClasses((prevClasses) => prevClasses.filter((cls) => cls.id !== id));
+  };
+
   return (
-    <ClassContext.Provider value={{ classes, addClass, updateClassName }}>
+    <ClassContext.Provider value={{ classes, addClass, updateClassName, deleteClass }}>
       {children}
     </ClassContext.Provider>
   );

@@ -27,7 +27,7 @@ const DnDFlow = () => {
   const { screenToFlowPosition } = useReactFlow();
   const [type] = useDnD();
   const [selectedNodeId, setSelectedNodeId] = useState(null);
-  const { classes, addClass } = useClassContext();
+  const { classes, addClass, deleteClass } = useClassContext();
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -71,10 +71,13 @@ const DnDFlow = () => {
 
   const onDeleteNode = useCallback(() => {
     if (selectedNodeId) {
+      // Delete the node from the flow
       setNodes((nds) => nds.filter((node) => node.id !== selectedNodeId));
+      // Delete the class from the global list
+      deleteClass(selectedNodeId);
       setSelectedNodeId(null); // Clear selection after deletion
     }
-  }, [selectedNodeId]);
+  }, [selectedNodeId, deleteClass]);
 
   return (
     <div className="dndflow">

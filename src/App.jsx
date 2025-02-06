@@ -95,7 +95,7 @@ const DnDFlow = () => {
           style={{ backgroundColor: "#F7F9FB" }}
         >
           <Controls />
-          <Background />
+          <Background variant='lines'/>
         </ReactFlow>
       </div>
       <Sidebar onDeleteNode={onDeleteNode} selectedNodeId={selectedNodeId} />

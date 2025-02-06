@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useClassContext } from '../context/ClassContext';
 
 export const ClassNode = ({ className, id }) => {
@@ -6,6 +6,14 @@ export const ClassNode = ({ className, id }) => {
   const [attributes, setAttributes] = useState([]);
   const { classes, updateClassName } = useClassContext();
   const [localClassName, setLocalClassName] = useState(className);
+  const [isApiModalOpen, setIsApiModalOpen] = useState(false); // State to manage modal visibility
+  const [selectedApis, setSelectedApis] = useState({ // State to manage selected APIs
+    get: false,
+    getAll: false,
+    post: false,
+    patch: false,
+    delete: false,
+  });
 
   // Filter out the current class from the available classes
   const availableClasses = classes.filter((cls) => cls.name !== localClassName);
@@ -20,6 +28,14 @@ export const ClassNode = ({ className, id }) => {
     const newClassName = e.target.value;
     setLocalClassName(newClassName);
     updateClassName(id, newClassName);
+  };
+
+  const toggleApiModal = () => {
+    setIsApiModalOpen(!isApiModalOpen);
+  };
+
+  const handleApiSelection = (api) => {
+    setSelectedApis({ ...selectedApis, [api]: !selectedApis[api] });
   };
 
   return (
@@ -103,6 +119,96 @@ export const ClassNode = ({ className, id }) => {
           +
         </button>
       </div>
+
+      {/* API Selection Button */}
+      <button 
+        onClick={toggleApiModal}
+        style={{
+          marginTop: '8px',
+          padding: '8px 16px',
+          backgroundColor: '#007BFF',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        }}
+      >
+        Select APIs
+      </button>
+
+      {/* API Selection Modal */}
+      {isApiModalOpen && (
+  <div style={{
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: 'white',
+    padding: '24px',
+    borderRadius: '12px',
+    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.2)',
+    zIndex: 1000,
+    width: '90%',
+    maxWidth: '400px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  }}>
+    <h3 style={{
+      marginBottom: '16px',
+      fontSize: '20px',
+      fontWeight: 'bold',
+      textAlign: 'center',
+    }}>
+      Select APIs for {localClassName}
+    </h3>
+    
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      width: '100%',
+      gap: '10px',
+    }}>
+      {Object.keys(selectedApis).map((api) => (
+        <label key={api} style={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          padding: '8px',
+          borderRadius: '6px',
+          cursor: 'pointer',
+          backgroundColor: selectedApis[api] ? '#e3f2fd' : 'transparent',
+          transition: 'background 0.3s ease',
+        }}>
+          <input
+            type="checkbox"
+            checked={selectedApis[api]}
+            onChange={() => handleApiSelection(api)}
+            style={{ marginRight: '10px', cursor: 'pointer' }}
+          />
+          {api.toUpperCase()}
+        </label>
+      ))}
+    </div>
+
+    <button 
+      onClick={toggleApiModal}
+      style={{
+        marginTop: '20px',
+        padding: '10px 20px',
+        backgroundColor: '#007BFF',
+        color: 'white',
+        border: 'none',
+        borderRadius: '6px',
+        cursor: 'pointer',
+        fontSize: '16px',
+      }}
+    >
+          Close
+        </button>
+      </div>
+    )}
     </div>
   );
 };
